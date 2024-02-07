@@ -47,6 +47,7 @@ thead {
 }
 td,
 th {
+  font-size: 1.5rem;
   padding: 8px 16px;
   text-align: left;
 }
@@ -173,7 +174,7 @@ tr:hover td {
       ?>
       <tr>
         <td><?=$no;?></td>
-        <td><?= date("d-m-Y",strtotime($fetch_referral['tarikh']));?></td>
+        <td><?= date("d/m/y",strtotime($fetch_referral['tarikh']));?></td>
         <td><?=$fetch_referral['referral_code'];?></td>
         <td><?=$fetch_referral['komisen_masuk'];?></td>
         <td><?=$fetch_referral['status'];?></td>

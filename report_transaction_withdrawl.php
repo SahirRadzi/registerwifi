@@ -67,6 +67,7 @@ thead {
 }
 td,
 th {
+  font-size: 1.5rem;
   padding: 8px 16px;
   text-align: left;
 }
@@ -80,16 +81,23 @@ td {
 }
 
 td .claim{
-  margin-top: 1rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  color: #222;
   border: 2px solid #222;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+td .claim:hover{
   background-color: #222;
   color: #fff;
 }
 
-td .claim:hover{
-  background-color: #fff;
-  color: #222;
+td .disabled {
+  opacity: 0.5;
+  user-select: none;
+  pointer-events: none;
 }
 
 tr:hover td {
@@ -119,8 +127,8 @@ tr:hover td {
       <div class="box">
       <?php
          $jumlah_keseluruhan = 0;
-         $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['pending', $unique_id]);
+         $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE user.unique_id = ?");
+         $select_my_affiliate->execute([$unique_id]);
             while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
                 $jumlah_keseluruhan += $total_komisen_masuk['komisen_masuk'];
             }
@@ -135,7 +143,7 @@ tr:hover td {
       <?php
          $jumlah_pengeluaran = 0;
          $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['completed', $unique_id]);
+         $select_my_affiliate->execute(['claim', $unique_id]);
             while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
                 $jumlah_pengeluaran += $total_komisen_masuk['komisen_masuk'];
             }
@@ -152,7 +160,7 @@ tr:hover td {
       <?php
          $jumlah_baki_semasa = 0;
          $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['proses', $unique_id]);
+         $select_my_affiliate->execute(['pending', $unique_id]);
             while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
                 $jumlah_baki_semasa += $total_komisen_masuk['komisen_masuk'];
             }
@@ -194,6 +202,7 @@ tr:hover td {
         <th>Komisen (RM)</th>
         <th>Status</th>
         <th>Action</th>
+
       </tr>
     </thead>
     <tbody>
@@ -210,7 +219,7 @@ tr:hover td {
     <?php 
 
 $no = 1;
-$select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
+$select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.id, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
 $select_all->execute([$myreferral]);
 if($select_all->rowCount() > 0){
     while($fetch_referral = $select_all->fetch(PDO::FETCH_ASSOC)){
@@ -218,10 +227,16 @@ if($select_all->rowCount() > 0){
 ?>
 <tr>
   <td><?=$no;?></td>
-  <td><?= date("d-m-Y",strtotime($fetch_referral['tarikh']));?></td>
+  <td><?= date("d/m/y",strtotime($fetch_referral['tarikh']));?></td>
   <td><?=$fetch_referral['komisen_masuk'];?></td>
   <td><?=$fetch_referral['status'];?></td>
-  <td><a href="" class="claim">Claim</a></td>
+  <td>
+      <form action="" method="POST">
+        <input type="hidden" name="id" value="<?= $fetch_referral['id'];?>" />
+        <input type="hidden" name="status" value="<?= $fetch_referral['status'];?>" />
+        <input type="submit"  value="Claim" class="claim <?php if($fetch_referral['status'] =='claim' or $fetch_referral['status'] =='paid'){echo 'disabled';} ;?>" style="width:100%; background:#222; color:#fff;" name="claim">
+      </form>
+  </td>
 
   <?php 
         $no++;

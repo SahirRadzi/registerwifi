@@ -71,6 +71,12 @@ if(isset($_POST['add_komisen'])){
     a.btn{
       font-weight: normal !important;
     }
+
+    input .disabled {
+       opacity: 0.5;
+       user-select: none;
+       pointer-events: none;
+    }
    
     
    </style>
