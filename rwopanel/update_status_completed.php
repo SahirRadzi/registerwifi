@@ -10,13 +10,15 @@ if(!isset($unique_id)){
    header('location:admin_login.php');
 }
 
-if(isset($_POST['update_status'])){
+if(isset($_POST['add_komisen'])){
 
-   $id = $_POST['id'];
-   $status = $_POST['status'];
-   $update_status = $conn->prepare("UPDATE `orders_list` SET status = ? WHERE id = ?");
-   $update_status->execute([$status, $id]);
-   $message[] = 'order status updated!';
+   $referCode = $_POST['referCode'];
+   $olid = $_POST['olid'];
+   $komisen = $_POST['komisen'];
+   $uid = $_POST['uid'];
+   $update_komisen = $conn->prepare("INSERT INTO `report_affiliate` (referral_code, unique_id, olid, komisen_masuk) VALUES(?,?,?,?)");
+   $update_komisen->execute([$referCode, $uid, $olid, $komisen]);
+   $message[] = 'sent komisen successful!';
 
 }
 
@@ -28,7 +30,7 @@ if(isset($_POST['update_status'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Update Status Cancel | RWO Panel</title>
+   <title>Update Status Completed | RWO Panel</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -61,6 +63,12 @@ if(isset($_POST['update_status'])){
     a.btn{
       font-weight: normal !important;
     }
+
+    input .disabled {
+       opacity: 0.5;
+       user-select: none;
+       pointer-events: none;
+    }
    
     
    </style>
@@ -70,18 +78,18 @@ if(isset($_POST['update_status'])){
 
 <?php include '../components/admin_header.php' ?>
 
-<!-- total cancel section starts  -->
+<!-- total proceed section starts  -->
 
 <section class="placed-orders">
 
       <?php
-         $jumlah_batal = 0;
+         $jumlah_selesai = 0;
          $select_proses = $conn->prepare("SELECT * FROM `orders_list` WHERE status =? ");
-         $select_proses->execute(['Batal']);
-            $jumlah_batal = $select_proses->rowCount();
+         $select_proses->execute(['Selesai']);
+            $jumlah_selesai = $select_proses->rowCount();
       ?>
 
-   <h1 class="heading">update status cancel | <?= $jumlah_batal;?></h1>
+   <h1 class="heading">update status completed | <?= $jumlah_selesai ;?></h1>
          <form action="" method="POST" class="search-form">
             <input type="text" name="search_box" placeholder="search uid / ic " maxlength="100" required>
             <button type="submit" class="fas fa-search" name="search_btn"></button>
@@ -93,11 +101,11 @@ if(isset($_POST['update_status'])){
 if(isset($_POST['search_box']) OR isset($_POST['search_btn'])){
    $search_box = $_POST['search_box'];
    $search_box = filter_var($search_box, FILTER_SANITIZE_STRING);
-   $select_listings = $conn->prepare("SELECT orders_list.id, orders_list.unique_id, orders_list.tarikh, orders_list.nama, orders_list.email, orders_list.phoneno, orders_list.nokp, orders_list.alamatPemasangan, orders_list.alamatBill, products.s_name, products.price, orders_list.tarikhWaktu, orders_list.signa_c, orders_list.imgBill, orders_list.imgKpD, orders_list.imgKpB, orders_list.status FROM orders_list INNER JOIN products ON orders_list.pid = products.id WHERE status = 'Batal' AND unique_id LIKE '%{$search_box}%' OR nokp LIKE '%{$search_box}%'");
+   $select_listings = $conn->prepare("SELECT orders_list.id, orders_list.unique_id, orders_list.tarikh, orders_list.nama, orders_list.email, orders_list.phoneno, orders_list.nokp, orders_list.alamatPemasangan, orders_list.alamatBill, products.s_name, products.price, products.komisen, orders_list.tarikhWaktu, orders_list.signa_c, orders_list.imgBill, orders_list.imgKpD, orders_list.imgKpB, orders_list.status, orders_list.referCode FROM orders_list INNER JOIN products ON orders_list.pid = products.id WHERE status = 'Selesai' AND unique_id LIKE '%{$search_box}%' OR nokp LIKE '%{$search_box}%'");
    $select_listings->execute();
 }else
 
-$select_listings = $conn->prepare("SELECT orders_list.id, orders_list.unique_id, orders_list.tarikh, orders_list.nama, orders_list.email, orders_list.phoneno, orders_list.nokp, orders_list.alamatPemasangan, orders_list.alamatBill, products.s_name, products.price, orders_list.tarikhWaktu, orders_list.signa_c, orders_list.imgBill, orders_list.imgKpD, orders_list.imgKpB, orders_list.status FROM orders_list INNER JOIN products ON orders_list.pid = products.id WHERE status = 'Batal'");
+$select_listings = $conn->prepare("SELECT orders_list.id, orders_list.unique_id, orders_list.tarikh, orders_list.nama, orders_list.email, orders_list.phoneno, orders_list.nokp, orders_list.alamatPemasangan, orders_list.alamatBill, products.s_name, products.price, products.komisen, orders_list.tarikhWaktu, orders_list.signa_c, orders_list.imgBill, orders_list.imgKpD, orders_list.imgKpB, orders_list.status, orders_list.referCode FROM orders_list INNER JOIN products ON orders_list.pid = products.id WHERE status = 'Selesai'");
 $select_listings->execute();
 if($select_listings->rowCount() > 0){
    while($fetch_orders = $select_listings->fetch(PDO::FETCH_ASSOC)){
@@ -125,19 +133,16 @@ if($select_listings->rowCount() > 0){
       <form action="" method="POST">
       <p> Status: <span><?= $fetch_orders['status']; ?></span></p>
 
-         <input type="hidden" name="id" value="<?= $fetch_orders['id']; ?>">
-         <select name="status" class="drop-down">
-            <option value="" selected disabled><?= $fetch_orders['status']; ?></option>
-            <option value="Baru">Baru</option>
-            <option value="Batal">Batal</option>
-            <option value="Proses">Proses</option>
+         
+         <input type="hidden" name="referCode" value="<?= $fetch_orders['referCode']; ?>">
+         <input type="hidden" name="olid" value="<?= $fetch_orders['id']; ?>">
+         <input type="hidden" name="uid" value="<?= $fetch_orders['unique_id']; ?>">
+         <select name="komisen" class="drop-down">
+            <option value="" selected disabled> sila pilih komisen--</option>
+            <option value="<?= $fetch_orders['komisen'];?>"><?= $fetch_orders['komisen'];?></option>
          </select>
-         <div class="flex-btn">
-            <input type="submit" value="update status" class="btn" name="update_status">
-            <a href="update_list.php?update=<?=$fetch_orders['id'];?>" class="btn">update all</a>
-           
-         </div>
-         <a href="view_details.php?view=<?= $fetch_orders['id'];?>" class="view-btn">Views</a>
+
+         <input type="submit" value="sent komisen" class="view-btn" name="add_komisen">
       </form>
    </div>
 
@@ -146,14 +151,14 @@ if($select_listings->rowCount() > 0){
       }elseif(isset($_POST['search_box']) OR isset($_POST['search_btn'])){
          echo '<p class="empty">no results found!</p>';
    }else{
-      echo '<p class="empty">no cancel list yet!</p>';
+      echo '<p class="empty">no proceed list yet!</p>';
    }
    ?>
    </div>
 
 </section>
 
-<!-- total cancel section ends -->
+<!-- total proceed section ends -->
 
 
 

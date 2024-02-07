@@ -29,6 +29,16 @@ if(isset($_POST['submit'])){
 
         };
 
+if(isset($_POST['claim'])){
+  $ra_id = $_POST['id'];
+  $ra_status = 'claim';
+
+  $update_ra_status = $conn->prepare("UPDATE `report_affiliate` set status = ? WHERE id = ?");
+  $update_ra_status->execute([$ra_status, $ra_id]);
+
+  $success_msg[] = 'claim submitted!';
+}
+
 
 
 ?>
@@ -219,7 +229,7 @@ tr:hover td {
     <?php 
 
 $no = 1;
-$select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.id, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
+$select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, user.account_number, user.name_bank, report_affiliate.id, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
 $select_all->execute([$myreferral]);
 if($select_all->rowCount() > 0){
     while($fetch_referral = $select_all->fetch(PDO::FETCH_ASSOC)){
@@ -233,8 +243,8 @@ if($select_all->rowCount() > 0){
   <td>
       <form action="" method="POST">
         <input type="hidden" name="id" value="<?= $fetch_referral['id'];?>" />
-        <input type="hidden" name="status" value="<?= $fetch_referral['status'];?>" />
-        <input type="submit"  value="Claim" class="claim <?php if($fetch_referral['status'] =='claim' or $fetch_referral['status'] =='paid'){echo 'disabled';} ;?>" style="width:100%; background:#222; color:#fff;" name="claim">
+        <!-- <input type="hidden" name="status" value="claim" /> -->
+        <input type="submit"  value="Claim" class="claim <?php if($fetch_referral['status'] =='claim' or $fetch_referral['status'] =='paid'){echo 'disabled';}if($fetch_referral['account_number'] == ''){echo 'disabled';} elseif($fetch_referral['name_bank'] == ''){echo 'disabled';}  ;?>" style="width:100%; background:#222; color:#fff;" name="claim">
       </form>
   </td>
 

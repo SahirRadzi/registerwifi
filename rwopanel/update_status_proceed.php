@@ -19,16 +19,6 @@ if(isset($_POST['update_status'])){
    $message[] = 'order status updated!';
 
 }
-if(isset($_POST['add_komisen'])){
-
-   $referCode = $_POST['referCode'];
-   $olid = $_POST['olid'];
-   $komisen = $_POST['komisen'];
-   $update_komisen = $conn->prepare("INSERT INTO `report_affiliate` (referral_code, olid, komisen_masuk) VALUES(?,?,?)");
-   $update_komisen->execute([$referCode, $olid, $komisen]);
-   $message[] = 'sent komisen successful!';
-
-}
 
 ?>
 
@@ -109,7 +99,7 @@ if(isset($_POST['add_komisen'])){
 if(isset($_POST['search_box']) OR isset($_POST['search_btn'])){
    $search_box = $_POST['search_box'];
    $search_box = filter_var($search_box, FILTER_SANITIZE_STRING);
-   $select_listings = $conn->prepare("SELECT orders_list.id, orders_list.unique_id, orders_list.tarikh, orders_list.nama, orders_list.email, orders_list.phoneno, orders_list.nokp, orders_list.alamatPemasangan, orders_list.alamatBill, products.s_name, products.price, products.komisen, orders_list.tarikhWaktu, orders_list.signa_c, orders_list.imgBill, orders_list.imgKpD, orders_list.imgKpB, orders_list.status, orders_list.referCode FROM orders_list INNER JOIN products ON orders_list.pid = products.id WHERE status = 'Proses' AND unique_id LIKE '%{$search_box}%' AND nokp LIKE '%{$search_box}%'");
+   $select_listings = $conn->prepare("SELECT orders_list.id, orders_list.unique_id, orders_list.tarikh, orders_list.nama, orders_list.email, orders_list.phoneno, orders_list.nokp, orders_list.alamatPemasangan, orders_list.alamatBill, products.s_name, products.price, products.komisen, orders_list.tarikhWaktu, orders_list.signa_c, orders_list.imgBill, orders_list.imgKpD, orders_list.imgKpB, orders_list.status, orders_list.referCode FROM orders_list INNER JOIN products ON orders_list.pid = products.id WHERE status = 'Proses' AND unique_id LIKE '%{$search_box}%' OR nokp LIKE '%{$search_box}%'");
    $select_listings->execute();
 }else
 
@@ -155,15 +145,6 @@ if($select_listings->rowCount() > 0){
            
          </div>
          <a href="view_details.php?view=<?= $fetch_orders['id'];?>" class="view-btn">Views</a>
-
-         <input type="hidden" name="referCode" value="<?= $fetch_orders['referCode']; ?>">
-         <input type="hidden" name="olid" value="<?= $fetch_orders['id']; ?>">
-         <select name="komisen" class="drop-down">
-            <option value="" selected disabled> sila pilih komisen--</option>
-            <option value="<?= $fetch_orders['komisen'];?>"><?= $fetch_orders['komisen'];?></option>
-         </select>
-
-         <input type="submit" value="sent komisen" class="view-btn" name="add_komisen">
       </form>
    </div>
 
