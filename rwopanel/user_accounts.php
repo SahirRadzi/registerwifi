@@ -12,9 +12,9 @@ if(!isset($unique_id)){
 
 if(isset($_GET['delete'])){
    $delete_id = $_GET['delete'];
-   $delete_admin = $conn->prepare("DELETE FROM `admin` WHERE id = ?");
-   $delete_admin->execute([$delete_id]);
-   header('location:admin_accounts.php');
+   $delete_user = $conn->prepare("DELETE FROM `user` WHERE id = ?");
+   $delete_user->execute([$delete_id]);
+   header('location:user_accounts.php');
 }
 
 ?>
@@ -25,7 +25,7 @@ if(isset($_GET['delete'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>admins accounts</title>
+   <title>user accounts</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -45,18 +45,13 @@ if(isset($_GET['delete'])){
 
 <section class="accounts">
 
-   <h1 class="heading">admins account</h1>
+   <h1 class="heading">users account</h1>
 
    <div class="box-container">
 
-   <div class="box">
-      <p>register new admin</p>
-      <a href="register_admin.php" class="option-btn">register</a>
-
-   </div>
 
    <?php
-      $select_account = $conn->prepare("SELECT * FROM `admin`");
+      $select_account = $conn->prepare("SELECT * FROM `user`");
       $select_account->execute();
       if($select_account->rowCount() > 0){
          while($fetch_accounts = $select_account->fetch(PDO::FETCH_ASSOC)){  
@@ -67,12 +62,7 @@ if(isset($_GET['delete'])){
       <p> username : <span><?= $fetch_accounts['nama']; ?></span> </p>
       <p> email : <span><?= $fetch_accounts['email']; ?></span> </p>
       <div class="flex-btn">
-         <a href="admin_accounts.php?delete=<?= $fetch_accounts['id']; ?>" class="delete-btn" onclick="return confirm('Are you sure, delete admin account <?= $fetch_accounts['nama']; ?>?');">delete</a>
-         <?php
-            if($fetch_accounts['unique_id'] == $unique_id){
-                  echo '<a href="update_profile.php" class="option-btn ">update</a>'; 
-            }
-         ?>
+         <a href="user_accounts.php?delete=<?= $fetch_accounts['id']; ?>" class="delete-btn" onclick="return confirm('Are you sure, delete user account <?= $fetch_accounts['nama']; ?>?');">delete</a>
       </div>
    </div>
    <?php

@@ -37,7 +37,7 @@ if(isset($_SESSION['unique_id'])){
 table {
   border-collapse: collapse;
   width: 100%;
-  min-width: auto;
+ 
 }
 thead {
   background-color: #222;
@@ -65,7 +65,11 @@ tr:hover td {
 
 @media screen and (max-width: 576px) {
   table{
-    min-width: 200px;
+    min-width: 50%;
+  }
+  td,
+  th{
+    font-size: 1.2rem;
   }
 }
 /* end: Table */
@@ -83,11 +87,11 @@ tr:hover td {
 
    <div class="box-container">
 
-      <div class="box">
+    <div class="box">
       <?php
          $jumlah_keseluruhan = 0;
-         $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['pending', $unique_id]);
+         $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE user.unique_id = ?");
+         $select_my_affiliate->execute([$unique_id]);
             while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
                 $jumlah_keseluruhan += $total_komisen_masuk['komisen_masuk'];
             }
@@ -102,7 +106,7 @@ tr:hover td {
       <?php
          $jumlah_pengeluaran = 0;
          $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['completed', $unique_id]);
+         $select_my_affiliate->execute(['claim', $unique_id]);
             while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
                 $jumlah_pengeluaran += $total_komisen_masuk['komisen_masuk'];
             }
@@ -119,7 +123,7 @@ tr:hover td {
       <?php
          $jumlah_baki_semasa = 0;
          $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['proses', $unique_id]);
+         $select_my_affiliate->execute(['pending', $unique_id]);
             while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
                 $jumlah_baki_semasa += $total_komisen_masuk['komisen_masuk'];
             }
@@ -139,17 +143,15 @@ tr:hover td {
 
 <section class="referral-program">
 
-<h1 class="heading">report transaction list</h1>
-
-
+<h1 class="heading">report transaction</h1>
 
 <table id="myTable" class="table table-striped">
     <thead>
       <tr>
         <th>#</th>
         <th>Tarikh</th>
-        <th>Ref Code</th>
-        <th>Komisen (RM)</th>
+        <th>Order</th>
+        <th>Komisen</th>
         <th>Status</th>
       </tr>
     </thead>
@@ -166,7 +168,7 @@ tr:hover td {
       <?php 
 
       $no = 1;
-      $select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
+      $select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.olid, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
       $select_all->execute([$myreferral]);
       if($select_all->rowCount() > 0){
           while($fetch_referral = $select_all->fetch(PDO::FETCH_ASSOC)){
@@ -175,8 +177,8 @@ tr:hover td {
       <tr>
         <td><?=$no;?></td>
         <td><?= date("d/m/y",strtotime($fetch_referral['tarikh']));?></td>
-        <td><?=$fetch_referral['referral_code'];?></td>
-        <td><?=$fetch_referral['komisen_masuk'];?></td>
+        <td><?=$fetch_referral['olid'];?></td>
+        <td> RM <?=$fetch_referral['komisen_masuk'];?></td>
         <td><?=$fetch_referral['status'];?></td>
 
         <?php 
@@ -196,8 +198,6 @@ tr:hover td {
     </tbody>
 
     </table>
-
-
 
 </section>
 

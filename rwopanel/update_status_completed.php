@@ -22,6 +22,16 @@ if(isset($_POST['add_komisen'])){
 
 }
 
+if(isset($_POST['update_status'])){
+
+   $id = $_POST['id'];
+   $status = $_POST['status'];
+   $update_status = $conn->prepare("UPDATE `orders_list` SET status = ? WHERE id = ?");
+   $update_status->execute([$status, $id]);
+   $message[] = 'order status updated!';
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -114,32 +124,32 @@ if($select_listings->rowCount() > 0){
    <div class="box">
 
    <div class="box-queue-number">unifi</div>
-      <div class="box-queue">
-         <?= $fetch_orders['s_name']; ?>
-      </div>
+      
 
       <p><b>#<span><?= $fetch_orders['id'];?></p>
       <p> Uid : <span><?= $fetch_orders['unique_id'] ;?></span></p>
-      <p> Tarikh Pemohon : <span><?= date("d-m-Y",strtotime($fetch_orders['tarikh'])) ;?></span></p>
-      <p> Nama Pemohon : <span><?= $fetch_orders['nama'] ;?></span></p>
-      <p> Email : <span><?= $fetch_orders['email'] ;?></span></p>
-      <p> Phone No : <span><?= $fetch_orders['phoneno'] ;?></span></p>
-      <p> No K/P : <span><?= $fetch_orders['nokp'] ;?></span></p>
-      <p> Alamat Pemasangan : <span><?= $fetch_orders['alamatPemasangan'] ;?></span></p>
-      <p> Alamat S/Menyurat : <span><?= $fetch_orders['alamatBill'] ;?></span></p>
       <p> Img Bill : <span><?php if($fetch_orders['imgBill'] == ''){echo'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>';} else{echo'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>';};?></span></p>
       <p> Img K/P D : <span><?php if($fetch_orders['imgKpD'] == ''){echo'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>';} else{echo'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>';} ;?></span></p>
       <p> Img K/P B : <span><?php if($fetch_orders['imgKpB'] == ''){echo'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>';} else{echo'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path></svg>';} ;?></span></p>
       <form action="" method="POST">
       <p> Status: <span><?= $fetch_orders['status']; ?></span></p>
-
+         
+      <input type="hidden" name="id" value="<?= $fetch_orders['id']; ?>">
+         <select name="status" class="drop-down">
+            <option value="" selected disabled><?= $fetch_orders['status']; ?></option>
+            <option value="Komisen Done">komisen done</option>
+         </select>
+         <div class="flex-btn">
+            <input type="submit" value="update status" class="btn" name="update_status">
+         </div>
          
          <input type="hidden" name="referCode" value="<?= $fetch_orders['referCode']; ?>">
          <input type="hidden" name="olid" value="<?= $fetch_orders['id']; ?>">
          <input type="hidden" name="uid" value="<?= $fetch_orders['unique_id']; ?>">
          <select name="komisen" class="drop-down">
-            <option value="" selected disabled> sila pilih komisen--</option>
+            <option value="" selected disabled> Pilih Komisen --</option>
             <option value="<?= $fetch_orders['komisen'];?>"><?= $fetch_orders['komisen'];?></option>
+          
          </select>
 
          <input type="submit" value="sent komisen" class="view-btn" name="add_komisen">

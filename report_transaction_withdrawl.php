@@ -67,7 +67,6 @@ if(isset($_POST['claim'])){
 table {
   border-collapse: collapse;
   width: 100%;
-  min-width: 400px;
 }
 thead {
   background-color: #222;
@@ -116,7 +115,11 @@ tr:hover td {
 
 @media screen and (max-width: 576px) {
   table{
-    min-width: 200px;
+    min-width: 50%;
+  }
+  td,
+  th{
+    font-size: 1.2rem;
   }
 }
 /* end: Table */
@@ -127,6 +130,21 @@ tr:hover td {
 <body>
    
 <?php include 'components/user_header.php'; ?>
+
+<section class="property-form">
+
+   <form action="">
+     
+      <div class="box">
+        <p><span class="bold">Nota Penting : Withdrawl</span></p>
+
+        <p>
+        Sila kemaskini maklumat bank anda serta nama akaun sistem ini sama dengan nama pemilik akaun bank sebelum melakukan claim dibawah.
+        </p>
+
+      </div>
+   </form>
+</section>
 
 <section class="referral-program">
 
@@ -202,14 +220,14 @@ tr:hover td {
 
 <section class="referral-program">
 
-   <h1 class="heading">report transaction withdrawal</h1>
+   <h1 class="heading">status withdrawal</h1>
 
     <table id="myTable" class="table table-striped">
     <thead>
       <tr>
         <th>#</th>
         <th>Tarikh</th>
-        <th>Komisen (RM)</th>
+        <th>Komisen</th>
         <th>Status</th>
         <th>Action</th>
 
@@ -238,7 +256,7 @@ if($select_all->rowCount() > 0){
 <tr>
   <td><?=$no;?></td>
   <td><?= date("d/m/y",strtotime($fetch_referral['tarikh']));?></td>
-  <td><?=$fetch_referral['komisen_masuk'];?></td>
+  <td> RM <?=$fetch_referral['komisen_masuk'];?></td>
   <td><?=$fetch_referral['status'];?></td>
   <td>
       <form action="" method="POST">

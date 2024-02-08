@@ -42,15 +42,60 @@ if(!isset($unique_id)){
 
    <div class="box-container">
 
-   <!-- Welcome | start -->
+    <!-- Welcome | start -->
 
-   <div class="box">
+    <div class="box">
       <h3>welcome!</h3>
       <p><?= $fetch_profile['nama']; ?></p>
       <a href="update_profile.php" class="btn">update profile</a>
    </div>
 
    <!-- Welcome | ends -->
+
+   <!-- Number of Admin | starts -->
+
+   <div class="box">
+      <?php
+         $select_admins = $conn->prepare("SELECT * FROM `admin`");
+         $select_admins->execute();
+         $numbers_of_admins = $select_admins->rowCount();
+      ?>
+      <h3><?= $numbers_of_admins; ?></h3>
+      <p>admins</p>
+      <a href="admin_accounts.php" class="btn">see admins</a>
+   </div>
+
+   <!-- Number of Admin | ends -->
+
+      <!-- Number of User | starts -->
+
+      <div class="box">
+      <?php
+         $select_users = $conn->prepare("SELECT * FROM `user`");
+         $select_users->execute();
+         $numbers_of_users = $select_users->rowCount();
+      ?>
+      <h3><?= $numbers_of_users; ?></h3>
+      <p>users</p>
+      <a href="user_accounts.php" class="btn">see users</a>
+   </div>
+
+   <!-- Number of User | ends -->
+
+<!-- Message | starts -->
+   <div class="box">
+      <?php
+         $select_messages = $conn->prepare("SELECT * FROM `messages`");
+         $select_messages->execute();
+         $numbers_of_messages = $select_messages->rowCount();
+      ?>
+   <h3><?= $numbers_of_messages; ?></h3>
+   <p>new messages</p>
+   <a href="#" class="btn">see messages</a>
+   </div>
+         <!-- Message | ends -->
+
+  
 
    <!-- Total All List | start -->
 
@@ -115,11 +160,37 @@ if(!isset($unique_id)){
 
 <!-- Total Cancel List / ends -->
 
-<?php
-         $select_all_list = $conn->prepare("SELECT * FROM `orders_list`");
-         $select_all_list->execute();
-            $jumlah_senarai = $select_all_list->rowCount();
+   <!-- Total Selesai List | start -->
+
+   <div class="box">
+      <?php
+         $jumlah_selesai = 0;
+         $select_complete = $conn->prepare("SELECT * FROM `orders_list` WHERE status =? ");
+         $select_complete->execute(['Selesai']);
+            $jumlah_selesai = $select_complete->rowCount();
       ?>
+      <h3><?= $jumlah_selesai; ?></h3>
+      <p>update status (100%)</p>
+      <a href="update_status_completed.php" class="btn">see list</a>
+   </div>
+
+<!-- Total Selesai List / ends -->
+
+   <!-- Total Commision List | start -->
+
+   <div class="box">
+      <?php
+         $jumlah_komisen = 0;
+         $select_komisen = $conn->prepare("SELECT * FROM `report_affiliate` WHERE status =? ");
+         $select_komisen->execute(['claim']);
+            $jumlah_komisen = $select_komisen->rowCount();
+      ?>
+      <h3><?= $jumlah_komisen; ?></h3>
+      <p>request commission</p>
+      <a href="request_commission.php" class="btn">see list</a>
+   </div>
+
+<!-- Total Commision List / ends -->
 
  <!-- Total All Demands | start -->
 
@@ -187,37 +258,7 @@ if(!isset($unique_id)){
 
 <!-- Total Demands Cancel List / ends -->
 
-   <!-- Number of Admin | starts -->
-
-   <div class="box">
-      <?php
-         $select_admins = $conn->prepare("SELECT * FROM `admin`");
-         $select_admins->execute();
-         $numbers_of_admins = $select_admins->rowCount();
-      ?>
-      <h3><?= $numbers_of_admins; ?></h3>
-      <p>admins</p>
-      <a href="admin_accounts.php" class="btn">see admins</a>
-   </div>
-
-   <!-- Number of Admin | ends -->
-
-<!-- Message | starts -->
-   <div class="box">
-      <?php
-         $select_messages = $conn->prepare("SELECT * FROM `messages`");
-         $select_messages->execute();
-         $numbers_of_messages = $select_messages->rowCount();
-      ?>
-   <h3><?= $numbers_of_messages; ?></h3>
-   <p>new messages</p>
-   <a href="#" class="btn">see messages</a>
-   </div>
-         <!-- Message | ends -->
-
-   </div>
-
-  
+</div>
 
 </section>
 

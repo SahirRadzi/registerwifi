@@ -87,7 +87,7 @@ if(isset($_POST['update_status'])){
             <button type="submit" class="fas fa-search" name="search_btn"></button>
          </form>
 
-<div class="box-container">  
+
          
    <?php
 
@@ -103,7 +103,7 @@ if(isset($_POST['update_status'])){
    if($select_listings->rowCount() > 0){
       while($fetch_orders = $select_listings->fetch(PDO::FETCH_ASSOC)){
    ?>
-
+<div class="box-container">  
    <div class="box">
 
    <div class="box-queue-number">unifi</div>
