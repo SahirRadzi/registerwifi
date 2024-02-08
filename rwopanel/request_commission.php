@@ -117,7 +117,7 @@ if($select_listings->rowCount() > 0){
       <p><b>#<span><?= $fetch_orders['olid'];?></p>
       <p> Referral Code : <span><?= $fetch_orders['referral_code'] ;?></span></p>
       <p> Commission : <span> RM <?= $fetch_orders['komisen_masuk'] ;?></span></p>
-      <p> Name of Bank : <span> RM <?= $fetch_orders['name_bank'] ;?></span></p>
+      <p> Name of Bank : <span><?= $fetch_orders['name_bank'] ;?></span></p>
       <p> Account Holder : <span><?= $fetch_orders['nama'] ;?></span></p>
       <p> Account Number : <span><?= $fetch_orders['account_number'] ;?></span></p>
       <form action="" method="POST">

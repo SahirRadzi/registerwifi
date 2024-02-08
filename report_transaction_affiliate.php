@@ -81,7 +81,7 @@ tr:hover td {
    
 <?php include 'components/user_header.php'; ?>
 
-<section class="referral-program">
+<section class="dashboard">
 
    <h1 class="heading">report transaction affiliate</h1>
 
@@ -103,10 +103,27 @@ tr:hover td {
       </div>
 
       <div class="box">
+
+      <?php
+        $jumlah_baki_semasa = 0;
+        $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
+        $select_my_affiliate->execute(['pending', $unique_id]);
+            while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
+                $jumlah_baki_semasa += $total_komisen_masuk['komisen_masuk'];
+            }
+      
+      ?>
+
+      <h3>RM <?= $jumlah_baki_semasa ;?></h3>
+      <p>Jumlah Baki Semasa Terkini</p>
+
+      </div>
+
+      <div class="box">
       <?php
          $jumlah_pengeluaran = 0;
          $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['claim', $unique_id]);
+         $select_my_affiliate->execute(['claim',$unique_id]);
             while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
                 $jumlah_pengeluaran += $total_komisen_masuk['komisen_masuk'];
             }
@@ -114,24 +131,24 @@ tr:hover td {
       ?>
         
       <h3>RM <?= $jumlah_pengeluaran;?></h3>
-      <p>Jumlah Pengeluaran</p>
+      <p>Jumlah Permohonan Pengeluaran Terkini</p>
    
       </div>
 
       <div class="box">
 
       <?php
-         $jumlah_baki_semasa = 0;
+         $jumlah_terima = 0;
          $select_my_affiliate = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, report_affiliate.referral_code, report_affiliate.komisen_masuk FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.status = ? AND user.unique_id = ?");
-         $select_my_affiliate->execute(['pending', $unique_id]);
-            while($total_komisen_masuk = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
-                $jumlah_baki_semasa += $total_komisen_masuk['komisen_masuk'];
+         $select_my_affiliate->execute(['paid', $unique_id]);
+            while($total_terima = $select_my_affiliate->fetch(PDO::FETCH_ASSOC)){
+                $jumlah_terima += $total_terima['komisen_masuk'];
             }
             
       ?>
       
-      <h3>RM <?= $jumlah_baki_semasa ;?></h3>
-      <p>Jumlah Baki Semasa</p>
+      <h3>RM <?= $jumlah_terima ;?></h3>
+      <p>Jumlah Terima Komisen Terkini</p>
 
       </div>
     
