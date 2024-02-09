@@ -103,7 +103,7 @@ if(isset($_SESSION['unique_id'])){
       <div class="content">
          <h3>Lengkap</h3>
          <p>Sistem ini lengkap dengan status pendaftaran anda</p>
-         <a href="#" class="btn">check my form</a>
+         <a href="my_form" class="btn">check my form</a>
       </div>
    </div>
     </section>
