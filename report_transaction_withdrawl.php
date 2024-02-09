@@ -19,11 +19,11 @@ if(isset($_POST['submit'])){
 
     $name_bank = $_POST['name_bank'];
     $name_bank = filter_var($name_bank, FILTER_SANITIZE_STRING);
-    $account_number = $_POST['account_number'];
-    $account_number = filter_var($account_number, FILTER_SANITIZE_STRING);
+    $acc_num = $_POST['acc_num'];
+    $acc_num = filter_var($acc_num, FILTER_SANITIZE_STRING);
 
-        $verify_nb = $conn->prepare("UPDATE `user` set account_number = ?, name_bank = ? WHERE unique_id = ?");
-        $verify_nb->execute([$account_number, $name_bank, $unique_id]);
+        $verify_nb = $conn->prepare("UPDATE `user` set acc_num = ?, name_bank = ? WHERE unique_id = ?");
+        $verify_nb->execute([$acc_num, $name_bank, $unique_id]);
 
         $success_msg[] = 'info bank updated!';
 
@@ -228,7 +228,7 @@ tr:hover td {
    <form action="" method="post">
       <h3>update info bank!</h3>
       <input type="text" name="name_bank" maxlength="50" placeholder="enter name of bank" value="<?= $fetch_user['name_bank']; ?>" class="box" required>
-      <input type="number" name="account_number" maxlength="50" placeholder="enter account number" value="<?= $fetch_user['account_number']; ?>" class="box" required>
+      <input type="number" name="acc_num" maxlength="50" placeholder="enter account number" value="<?= $fetch_user['acc_num']; ?>" class="box" required>
 
       <input type="submit" value="submit" name="submit" class="btn">
 
@@ -264,7 +264,7 @@ tr:hover td {
     <?php 
 
 $no = 1;
-$select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, user.account_number, user.name_bank, report_affiliate.id, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
+$select_all = $conn->prepare("SELECT user.unique_id, user.nama, user.referral_code, user.acc_num, user.name_bank, report_affiliate.id, report_affiliate.referral_code, report_affiliate.komisen_masuk, report_affiliate.tarikh, report_affiliate.status FROM user INNER JOIN report_affiliate ON user.referral_code = report_affiliate.referral_code WHERE report_affiliate.referral_code = ?");
 $select_all->execute([$myreferral]);
 if($select_all->rowCount() > 0){
     while($fetch_referral = $select_all->fetch(PDO::FETCH_ASSOC)){
@@ -279,7 +279,7 @@ if($select_all->rowCount() > 0){
       <form action="" method="POST">
         <input type="hidden" name="id" value="<?= $fetch_referral['id'];?>" />
         <!-- <input type="hidden" name="status" value="claim" /> -->
-        <input type="submit"  value="Claim" class="claim <?php if($fetch_referral['status'] =='claim' or $fetch_referral['status'] =='paid'){echo 'disabled';}if($fetch_referral['account_number'] == ''){echo 'disabled';} elseif($fetch_referral['name_bank'] == ''){echo 'disabled';}  ;?>" style="width:100%; background:#222; color:#fff;" name="claim">
+        <input type="submit"  value="Claim" class="claim <?php if($fetch_referral['status'] =='claim' or $fetch_referral['status'] =='paid'){echo 'disabled';}if($fetch_referral['acc_num'] == ''){echo 'disabled';} elseif($fetch_referral['name_bank'] == ''){echo 'disabled';}  ;?>" style="width:100%; background:#222; color:#fff;" name="claim">
       </form>
   </td>
 

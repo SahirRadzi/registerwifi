@@ -52,7 +52,7 @@ if(isset($_SESSION['unique_id'])){
    <div class="box swiper-slide">
       <img src="images/unifi01.jpg" alt="">
       <div class="flex">
-         <h3>NGAM 2024</h3>
+         <h3>PAKEJ NGAM 2024 TERKINI</h3>
          <!-- <a href="#reservation" class="btn">make a reservation</a> -->
       </div>
    </div>
@@ -81,7 +81,7 @@ if(isset($_SESSION['unique_id'])){
       <div class="content">
          <h3>Mudah</h3>
          <p>Register Wifi Online Lebih mudah untuk menghantar borang pendaftaran unifi anda di sistem ini. Promosi Unifi 100Mbps hanya RM 89. Daftar Sekarang.</p>
-         <a href="#" class="btn">submit form</a>
+         <a href="submit_form" class="btn">submit form</a>
       </div>
    </div>
 
@@ -136,8 +136,8 @@ if(isset($_SESSION['unique_id'])){
 <section class="contact" id="coverage">
 
    <div class="row">
-<!-- 
-      <form action="" method="post">
+
+      <!-- <form action="" method="post">
          <h3>check coverage</h3>
          <input type="text" name="name" required maxlength="50" placeholder="enter your name" class="box">
          <input type="email" name="email" required maxlength="50" placeholder="enter your email" class="box">

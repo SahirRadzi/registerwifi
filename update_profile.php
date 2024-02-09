@@ -48,8 +48,8 @@ if(isset($_POST['submit'])){
    $email = filter_var($email, FILTER_SANITIZE_STRING);
    $name_bank = $_POST['name_bank'];
    $name_bank = filter_var($name_bank, FILTER_SANITIZE_STRING);
-   $account_number = $_POST['account_number'];
-   $account_number = filter_var($account_number, FILTER_SANITIZE_STRING);
+   $acc_num = $_POST['acc_num'];
+   $acc_num = filter_var($acc_num, FILTER_SANITIZE_STRING);
 
    if(!empty($name)){
       $update_name = $conn->prepare("UPDATE `user` SET nama = ? WHERE unique_id = ?");
@@ -62,9 +62,9 @@ if(isset($_POST['submit'])){
       $update_bankname->execute([$name_bank, $unique_id]);
       $success_msg[] = 'name of bank updated!';
    }
-   if(!empty($account_number)) {
-      $update_accnumber = $conn->prepare("UPDATE `user` SET account_number = ? WHERE unique_id = ?");
-      $update_accnumber->execute([$account_number, $unique_id]);
+   if(!empty($acc_num)) {
+      $update_accnumber = $conn->prepare("UPDATE `user` SET acc_num = ? WHERE unique_id = ?");
+      $update_accnumber->execute([$acc_num, $unique_id]);
 
       $success_msg[] = 'account number updated!';
       }
@@ -152,8 +152,8 @@ if(isset($_POST['submit'])){
       <input type="password" name="c_pass" maxlength="20" placeholder="confirm your new password" class="box">
 
       <h3>update info bank!</h3>
-      <input type="text" name="name_bank" maxlength="50" placeholder="<?= $fetch_user['name_bank']; ?>" class="box">
-      <input type="number" name="account_number" maxlength="50" placeholder="<?= $fetch_user['account_number']; ?>" class="box">
+      <input type="text" name="name_bank" maxlength="50" placeholder="<?php if($fetch_user['name_bank'] != ''){echo $fetch_user['name_bank'];}else {echo 'enter name of bank';}; ?>" class="box">
+      <input type="number" name="acc_num" maxlength="50" placeholder="<?php if($fetch_user['acc_num'] != ''){echo $fetch_user['acc_num'];}else {echo 'enter account number';}; ?>" class="box">
 
       <input type="submit" value="update now" name="submit" class="btn">
    </form>

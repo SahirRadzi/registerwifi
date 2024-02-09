@@ -16,7 +16,6 @@ new DataTable("#example", {
     { title: "ALAMAT S/MENYURAT", data: "alamatBill" },
     { title: "PAKEJ", data: "pid" },
     { title: "TARIKH PEMASANGAN", data: "tarikhWaktu" },
-    { title: "SIGNATURE", data: "signa_c" },
     { title: "IMG BILL", data: "imgBill" },
     { title: "FRONT IC", data: "imgKpD" },
     { title: "BACK IC", data: "imgKpB" },
