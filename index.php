@@ -9,6 +9,33 @@ if(isset($_SESSION['unique_id'])){
 }else{
    $unique_id = '';
 };
+
+if(isset($_POST['send'])){
+
+   $nama = $_POST['nama'];
+   $nama = filter_var($nama, FILTER_SANITIZE_STRING);
+   $email = $_POST['email'];
+   $email = filter_var($email, FILTER_SANITIZE_STRING);
+   $phoneno = $_POST['phoneno'];
+   $phoneno = filter_var($phoneno, FILTER_SANITIZE_STRING);
+   $message = $_POST['message'];
+   $message = filter_var($message, FILTER_SANITIZE_STRING);
+
+   $select_message = $conn->prepare("SELECT * FROM `messages` WHERE nama = ? AND email = ? AND phoneno = ? AND message = ?");
+   $select_message->execute([$nama, $email, $phoneno, $message]);
+
+   if($select_message->rowCount() > 0){
+      $info_msg[] = 'already sent message!';
+   }else{
+
+      $insert_message = $conn->prepare("INSERT INTO `messages`(unique_id, nama, email, phoneno, message) VALUES(?,?,?,?,?)");
+      $insert_message->execute([$unique_id, $nama, $email, $phoneno, $message]);
+
+      $success_msg[] = 'sent message successfully!';
+
+   }
+
+}
 ?>
 
 
@@ -137,14 +164,14 @@ if(isset($_SESSION['unique_id'])){
 
    <div class="row">
 
-      <!-- <form action="" method="post">
+      <form action="" method="post">
          <h3>check coverage</h3>
-         <input type="text" name="name" required maxlength="50" placeholder="enter your name" class="box">
+         <input type="text" name="nama" required maxlength="50" placeholder="enter your name" class="box">
          <input type="email" name="email" required maxlength="50" placeholder="enter your email" class="box">
-         <input type="number" name="number" required maxlength="12" min="0" max="999999999999" placeholder="enter your number" class="box">
+         <input type="number" name="phoneno" required maxlength="12" min="0" max="999999999999" placeholder="enter your number" class="box">
          <textarea name="message" class="box" required maxlength="1000" placeholder="enter your full address" cols="30" rows="10"></textarea>
-         <input type="submit" value="send checking" name="send" class="btn">
-      </form> -->
+         <input type="submit" value="send" name="send" class="btn">
+      </form>
 
       <!-- <div class="faq">
          <h3 class="title">frequently asked questions</h3>

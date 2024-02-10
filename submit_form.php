@@ -263,7 +263,7 @@ if(isset($_POST['submit'])){
          <input type="number" name="phoneno" maxlength="12"  placeholder="Contoh: 01133165639" class="input">
          </div>
       <div class="box">
-         <p>4. Nombor Telefon Tambahan <span class="wrong">*</span></p>
+         <p>4. Nombor Telefon Tambahan (Jika ada)</p>
          <input type="number" name="phonenoTambahan" maxlength="12"  placeholder="Contoh: 01133165639" class="input">
          </div>
       <div class="box">

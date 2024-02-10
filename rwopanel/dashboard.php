@@ -90,8 +90,8 @@ if(!isset($unique_id)){
          $numbers_of_messages = $select_messages->rowCount();
       ?>
    <h3><?= $numbers_of_messages; ?></h3>
-   <p>new messages</p>
-   <a href="#" class="btn">see messages</a>
+   <p>new check coverage</p>
+   <a href="check_coverage" class="btn">see messages</a>
    </div>
          <!-- Message | ends -->
 
